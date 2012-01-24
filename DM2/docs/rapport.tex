@@ -11,6 +11,7 @@
 
 \DeclareMathOperator{\tr}{tr}
 \DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\argmin}{argmin}
 \DeclareMathOperator{\cov}{cov}
 
 
@@ -63,7 +64,7 @@ Considérons le noyau linéaire : $K(a, b) = ab$.
 C_n^K(X, Y ) & = & \max_{f, g \in \mathcal{B}_K} \cov_n(f(X), g(Y)) \\
 	     & = & \max_{f, g \in \mathcal{B}_K} \mathbf{E}_n(f(X) g(Y)) - \mathbf{E}_n(f(X))\mathbf{E}_n(g(Y)) \\
 	     & = & \max_{f, g \in \mathcal{B}_K} \frac{\sum_{i = 1}^n \langle f, K_{x_i}\rangle \langle g, K_{y_i}\rangle}{n^2} -
-						 \frac{\sum_{i = 1}^n \langle f, K_{x_i}\rangle \sum_{i = 1}^n \langle g, K_{y_i}\rangle}{n^2} 
+						 \frac{\sum_{i = 1}^n \langle f, K_{x_i}\rangle \sum_{i = 1}^n \langle g, K_{y_i}\rangle}{n^2}
 \end{align*}
 
 On peut poser $f(x) = wx$ et $g(wx) = vx$. Or $f, g \in \mathcal{B}_K$. Donc
@@ -74,7 +75,153 @@ On a donc:
 C_n^K(X, Y ) & = & \frac{\sum_{i = 1}^n x_i y_i}{n^2} - \frac{\sum_{i = 1}^n x_i \sum_{i = 1}^n y_i}{n^2}
 \end{align*}
 
+\subsection{Question 2}
 
 \section{Exercice 2}
+
+Soit $(x_1, x_2, \dots, x_n) \in \mathbb{R}^p$. On veut créer $K$ cluster. On
+pose $z^i$ les variables indiquant l'appartenance du point $i$ à un cluster.
+La fonction coût est définie par:
+
+\begin{equation*}
+C_K(z, \mu) = \sum_{i = 1}^n \| x_i - \mu_{z_i}\|^2
+\end{equation*}
+
+
 \subsection{Question 1}
+
+Afin de minimiser:
+
+\begin{equation*}
+\mu^k = \argmin_{\mu} C(z^i, \mu)
+\end{equation*}
+
+\begin{equation*}
+z^{i + 1} = \argmin_z C(z, \mu^i)
+\end{equation*}
+
+On peut itérer avec les équations suivantes:
+\begin{equation*}
+z^i = \argmax_k \| x_i - \mu_k\|
+\end{equation*}
+
+\begin{equation*}
+\mu^k = \frac{1}{N_k} \sum_{i \in C_k}x_i
+\end{equation*}
+
+\subsection{Question 2}
+On veut maintenant trouver un algorithme itératif similaire sur le RKHS
+$\mathcal{H}$, muni du noyau $K$ sur $\mathbb{R}^p$, i.e, minimiser:
+
+\begin{equation*}
+C_K(z, \mu) = \sum_{i = 1}^n \| \Phi(x_i) - \mu_{z_i}\|^2
+\end{equation*}
+
+où $\Phi : \mathbb{R^p} \rightarrow \mathcal{H}$ statisfait $\Phi(x)^T \Phi(x')
+= K(x, x')$
+
+On veut donc minimiser les deux équations suivantes:
+
+\begin{equation*}
+\mu^k = \argmin_{\mu} C(z^i, \mu)
+\end{equation*}
+
+\begin{equation*}
+z^{i + 1} = \argmin_z C(z, \mu^i)
+\end{equation*}
+
+On peut donc itérer sur les deux équations suivantes:
+
+\begin{align*}
+z^i & = & \argmax_k \| x_i - \mu^k \|_{\mathcal{H}} \\
+    & = & \argmax_k \( K(x_i, x_i) + K(\mu^k, \mu^k) - 2K(x_i, \mu^k)\)
+\end{align*}
+
+\begin{equation*}
+\mu^k = \frac{1}{N_k} \sum_{i \in C_k} \Phi(x_i)
+\end{equation*}
+
+Donc :
+
+\begin{align*}
+z^i & = & \argmax_k \( K(x_i, x_i) + \frac{1}{N_k} \sum_{j \in C_k} K(x_j, x_j) - 2 \frac{1}{N_k}\sum_{j \in \mathcal{C}_k} K(x_i, x_j)\)
+\end{align*}
+
+\subsection{Question 3}
+
+Soit $Z$ la matrice $n \times K$, comportant les valeurs $Z_{ij} = 1$ si $x_i$
+est dans le cluster $j$ et 0 sinon. On pose par ailleurs $N_j = \sum_{i = 1}^n
+Z_{ij}$ et $L$ la matrice diagonale $K \times K$, avec $L_{ii} =\frac{1}{N_i}$.
+Montrons que minimizer $C_K(z, \mu)$ revient à maximiser:
+
+\begin{equation*}
+\tr \( L^{1/2}Z^T K Z L^{1/2} \)
+\end{equation*}
+
+On pose $M = \Phi Z L Z^T$. C'est une matrice de taille $K$, contenant $\mu_k$. On
+peut donc réécrire le coût tel que:
+
+\begin{align*}
+C_K & = & \tr \[ \(\Phi - M\)^T \( \Phi - M \) \] \\
+    & = & \tr \[ \( \Phi - \Phi Z L Z^T \)^T \( \Phi - \Phi Z L Z^T\) \] \\
+    & = & \tr \[ \Phi\(I - Z L Z^T \)^2 \Phi^T \]
+\end{align*}
+
+De plus, on a $Z^T Z = L^{-1}$, donc $(Z L Z^T)^2 = (Z L Z^T)$. De même 
+$(I - ZLZ^T)^2 = (I - ZLZ^T)$. De plus, $L = L^{1/2} L^{1/2}$
+Donc:
+
+\begin{align*}
+C_K & = & \tr \[ \Phi\(I - Z L Z^T \) \Phi^T \] \\
+    & = & \tr \[ \Phi \Phi^T \] - \tr \[ \Phi Z L Z^T \Phi^T\] \\
+    & = & \tr \[ K \] - \tr \[ \Phi Z L Z^T \Phi^T\] \\
+    & = & \tr \[ K \] - \tr \[ K Z L Z^T \] \\
+    & = & \tr \[ K \] - \tr \[ Z^T K Z L^{1/2} L^{1/2} \] \\
+    & = & \tr \[ K \] - \tr \[ L^{1/2} Z^T K Z L^{1/2} \]
+\end{align*}
+
+Seul le deuxième terme de $C_K$ dépends de $Z$. Donc:
+
+\begin{align*}
+\min_Z C_K & = & \min_Z \{ \tr \[ K \] - \tr \[ L^{1/2} Z^T K Z L^{1/2} \] \} \\
+	   & = & \min_Z \{ - \tr \[ L^{1/2} Z^T K Z L^{1/2} \] \} \\
+	   & = & \max_Z \{ \tr \[ L^{1/2} Z^T K Z L^{1/2} \] \}
+\end{align*}
+
+\subsection{Question 4}
+
+Posons $H = Z L^{1/2}$.
+
+\begin{align*}
+H^T H & = & \( Z L^{1/2} \)^T \( Z L^{1/2} \) \\
+      & = & \( L^{1/2} \)^{T} Z^T Z L^{1/2}
+\end{align*}
+
+Or $L$ est diagonale, donc $\( L^{1/2} \)^{T} = L^{1/2}$. De plus, $Z^T Z = L^{-1}$. Donc:
+
+\begin{align*}
+H^T H & = & L^{1/2} L^{-1} L^{1/2} \\
+      & = & I
+\end{align*}
+
+On peut donc reformuler le problème:
+
+\begin{align*}
+\max_Z \{ \tr \[ L^{1/2} Z^T K Z L^{1/2} \] \} & = & \max_Z \{ \tr \[ H^T K H \] \}
+\end{align*}
+
+avec $H H^T = I$.
+
+On retrouve ici le problème du Kernel PCA, qui cherche à résoudre, $X$ étant
+une matrice de donnée de taille $n \times d$
+
+\begin{equation*}
+var (h_w) = \frac{1}{n}\frac{w^T X^T X w}{w^T w}
+\end{equation*}
+
+Afin de maximiser $\max_Z \{ \tr \[ H^T K H \] \}$, on peut donc chercher les
+$K$ plus grandes valeurs propres de $K$, et donc obtenir $C_K = \sum_{k = 1}^K
+\lambda_k$
+% FIXME pas très clair tout ça, mais on retrouve le spectral clustering
+
 \end{document}
