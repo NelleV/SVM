@@ -61,18 +61,16 @@ boule unité du RKHS de $K$, et $f(U) = (f(u_1), f(u_2), \dots, f(u_n))$
 Considérons le noyau linéaire : $K(a, b) = ab$.
 
 \begin{align*}
-C_n^K(X, Y ) & = & \max_{f, g \in \mathcal{B}_K} \cov_n(f(X), g(Y)) \\
-	     & = & \max_{f, g \in \mathcal{B}_K} \mathbf{E}_n(f(X) g(Y)) - \mathbf{E}_n(f(X))\mathbf{E}_n(g(Y)) \\
-	     & = & \max_{f, g \in \mathcal{B}_K} \frac{\sum_{i = 1}^n \langle f, K_{x_i}\rangle \langle g, K_{y_i}\rangle}{n^2} -
-						 \frac{\sum_{i = 1}^n \langle f, K_{x_i}\rangle \sum_{i = 1}^n \langle g, K_{y_i}\rangle}{n^2}
+C_n^K(X, Y ) & = & \max_{f, g \in \mathcal{B}_K} \cov_n(f(X), g(Y))
 \end{align*}
 
 On peut poser $f(x) = wx$ et $g(wx) = vx$. Or $f, g \in \mathcal{B}_K$. Donc
-$w = v = 1$.
-On a donc:
+$\| w \| = \| v \|  = 1$, donc $w$ et $v$ valent $1$ ou $-1$.
+On peut donc différencier 4 cas, $\cov_n(X, Y)$, $\cov_n(-X, Y)$, $\cov_n(X,
+-Y)$, $\cov_n(X, -Y)$. On peut facilement en déduire que :
 
 \begin{align*}
-C_n^K(X, Y ) & = & \frac{\sum_{i = 1}^n x_i y_i}{n^2} - \frac{\sum_{i = 1}^n x_i \sum_{i = 1}^n y_i}{n^2}
+C_n^K(X, Y ) & = & |\cov_n(X, Y)) |
 \end{align*}
 
 \subsection{Question 2}
@@ -158,7 +156,10 @@ Montrons que minimizer $C_K(z, \mu)$ revient à maximiser:
 \tr \( L^{1/2}Z^T K Z L^{1/2} \)
 \end{equation*}
 
-On pose $M = \Phi Z L Z^T$. C'est une matrice de taille $K$, contenant $\mu_k$. On
+On pose $M = \Phi Z L Z^T$, avec $\Phi$ matrice de taille $K \times n$, dont
+les colonnes contiennent $\Phi(x_i)$. On peut donc en déduire que $\Phi^T \Phi
+= K$
+M est une matrice de taille $K$, contenant $\mu_k$. On
 peut donc réécrire le coût tel que:
 
 \begin{align*}
@@ -221,7 +222,12 @@ var (h_w) = \frac{1}{n}\frac{w^T X^T X w}{w^T w}
 
 Afin de maximiser $\max_Z \{ \tr \[ H^T K H \] \}$, on peut donc chercher les
 $K$ plus grandes valeurs propres de $K$, et donc obtenir $C_K = \sum_{k = 1}^K
-\lambda_k$, en interpretant
+\lambda_k$.
+
+On retrouve ici le problème du spectral clustering, qui consiste à extraire
+des composantes principales grâce à l'algorithme ACP à noyau, et ensuite
+appliquer un k-means sur les données projetées sur les composantes
+principales.
 % FIXME pas très clair tout ça, mais on retrouve le spectral clustering
 
 \subsection{Question 5}
