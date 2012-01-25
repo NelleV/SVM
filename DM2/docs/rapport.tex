@@ -102,7 +102,7 @@ z^{i + 1} = \argmin_z C(z, \mu^i)
 
 On peut itérer avec les équations suivantes:
 \begin{equation*}
-z^i = \argmax_k \| x_i - \mu_k\|
+z^i = \argmin_k \| x_i - \mu_k\|
 \end{equation*}
 
 \begin{equation*}
@@ -133,8 +133,8 @@ z^{i + 1} = \argmin_z C(z, \mu^i)
 On peut donc itérer sur les deux équations suivantes:
 
 \begin{align*}
-z^i & = & \argmax_k \| x_i - \mu^k \|_{\mathcal{H}} \\
-    & = & \argmax_k \( K(x_i, x_i) + K(\mu^k, \mu^k) - 2K(x_i, \mu^k)\)
+z^i & = & \argmin_k \| x_i - \mu^k \|_{\mathcal{H}} \\
+    & = & \argmin_k \( K(x_i, x_i) + K(\mu^k, \mu^k) - 2K(x_i, \mu^k)\)
 \end{align*}
 
 \begin{equation*}
@@ -144,7 +144,7 @@ z^i & = & \argmax_k \| x_i - \mu^k \|_{\mathcal{H}} \\
 Donc :
 
 \begin{align*}
-z^i & = & \argmax_k \( K(x_i, x_i) + \frac{1}{N_k} \sum_{j \in C_k} K(x_j, x_j) - 2 \frac{1}{N_k}\sum_{j \in \mathcal{C}_k} K(x_i, x_j)\)
+z^i & = & \argmin_k \( K(x_i, x_i) + \frac{1}{N_k} \sum_{j \in C_k} K(x_j, x_j) - 2 \frac{1}{N_k}\sum_{j \in \mathcal{C}_k} K(x_i, x_j)\)
 \end{align*}
 
 \subsection{Question 3}
@@ -221,7 +221,19 @@ var (h_w) = \frac{1}{n}\frac{w^T X^T X w}{w^T w}
 
 Afin de maximiser $\max_Z \{ \tr \[ H^T K H \] \}$, on peut donc chercher les
 $K$ plus grandes valeurs propres de $K$, et donc obtenir $C_K = \sum_{k = 1}^K
-\lambda_k$
+\lambda_k$, en interpretant
 % FIXME pas très clair tout ça, mais on retrouve le spectral clustering
+
+\subsection{Question 5}
+
+Implémentation de la question 2:
+La première figure corresponds au cluster avec un K-means à noyau linéaire, la
+deuxième figure, un kmeans à noyau gaussien.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=550px]{./clusters.png}
+\end{center}
+\end{figure}
 
 \end{document}
