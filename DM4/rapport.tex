@@ -116,7 +116,122 @@ Bochner, $K_2(x, y)$ n'est donc pas défini positif.
 
 \item Posons $\forall x, y \in \mathbb{R}$, $K_3(x, y) =\frac{1}{1 + x + y}$
 
+Commençons par démontrer que les semi-charactères bornées sur le semi groupe
+abélien $(\mathbb{R}, +, Id)$ sont exactement l'ensemble des fonctions
+$s \in \mathbb{R}_+ \rightarrow \rho_a(s) = e^{-as}$.
+\begin{itemize}
+\item $\rho(x)$ est continue en 0
+\item Puisque $\rho(x + y) = \rho(x)\rho(y)$, $\rho$ est $\mathcal{C}^1$
+\item Posons $\varrho$ la primitive de $\rho$. On a donc $\varrho(x + y) =
+\int_{0}^{x + y} \rho(u) du$. Donc:
+\begin{align*}
+\varrho(x + y) & = & \int_{0}^{x + y}\rho(u) du\\
+	       & = & \int_{0}^x \rho(u) du + \int_{x}^{x + y} \rho(u) du \\
+	       & = & \int_{0}^x \rho(u) du + \int_{x}^{x + y} \rho(u) du \\
+	       & = & \int_{0}^x \rho(u) du + \int_{0}^{y} \rho(u + x) du \\
+	       & = & \int_{0}^x \rho(u) du + \int_{0}^{y} \rho(x)\rho(u) du \\
+\end{align*}
+% FIXME
+Donc $\rho$ est $\mathcal{C}^2$
+\end{itemize}
+Posons $d \mu(a) = e^{-a} da$. On a alors:
+
+\begin{align*}
+\int_0^\infty e^{-as}d\mu(a) & = & \int_0^\infty e^{-as}a^{-a}da \\
+			     & = & \int_0^\infty e^{-a(1 + s)}da \\
+			     & = &\frac{1}{1 + s}
+\end{align*}
+
+Donc $K_3$ est un noyau semi définie positif.
 
 \end{itemize}
+
+
+\section{Exercice 3}
+
+Montrons que $\max(x + y - 1, 0)$ est une loi associative interne dans $[0,
+1]$.
+
+\begin{align*}
+\max \( \max(x + y - 1, 0) + z - 1, 0 \) & = & \max \( \max(x + y + z - 2, z -
+1), 0\)
+\end{align*}
+
+Or $z - 1 \leq 0$, puisque $z \in [0, 1]$. Donc :
+
+\begin{align*}
+\max \( \max(x + y - 1, 0) + z - 1, 0 \) & = & \max \( \max(x + y + z - 2, 0\)
+\end{align*}
+
+Donc $\max(x + y - 1, 0)$ est une loi associative. De plus, $\forall (x, y)
+\in \mathbb{R}^2, x + y - 1 \in \mathbb{R}$, donc elle est interne.
+
+On peut donc définir un semi-groupe: $([0, 1], \circ)$, avec $x \circ y =
+\max(x + y - 1, 0)$, d'élément neutre $1$. $([0, 1], \circ, Id)$ est alors un
+semi-groupe avec involution.
+
+On cherche les fonctions $\phi$ telles que $\phi(\max(x + y - 1, 0))$ soit
+défini positif. On a donc:
+
+\begin{align*}
+a_1^2 \phi(\max(2x - 1, 0)) + 2 a_1 a_2 \phi(\max(x + y - 1, 0)) + a_2^2
+\phi(\max(2y - 1, 0)) \geq 0
+\end{align*}
+
+Supposons maintenant $x = 0$ et $y$ tel que $2y - 1 > 0$. Posons $u = 2y - 1$.
+On a alors:
+\begin{align*}
+a_1^2 \phi(0) + 2 a_1 a_2 \phi(0) + a_2^2 \phi(u) & \geq  & 0 \\
+\end{align*}
+
+Étudions le discriminant: $\Delta = 4 a_2^2 \phi(0)^2 - 4 \phi(0) a_2^2
+\phi(u)$. On sait que $\Delta \leq 0$. Donc $\phi(0)^2 - \phi(0)\phi(u) \leq
+0$. On a donc $\phi(0) \leq \phi(u)$, et ce $\forall u$. Donc $\min (\phi) =
+\phi(0)$.
+
+Prenons maintenant $x$ quelconque et $y = 1$. On a alors:
+\begin{align*}
+a_1^2 \phi(\max(2x - 1, 0)) + 2 a_1 a_2 \phi(x) + a_2^2 \phi(1) & \geq  & 0 \\
+\end{align*}
+
+Le discriminant est donc $\Delta = 4 a_1^2 \phi(x)^2 - 4 a_1^2 \phi(\max(2x -
+1, 0)) \phi(1)$. Puisque $\Delta \leq 0$, on a donc $\phi(x)^2 \leq
+\phi(\max(2x - 1, 0)) \phi(1)$
+
+
+Se présentent alors à nous deux cas:
+
+\begin{itemize}
+\item $x \leq \frac{1}{2}$: on a alors $\max(2x - 1, 0) = 0$
+et donc $\phi(x)^2 \leq \phi(0) \phi(1)$; or $\phi(0) \leq \phi(x)$, donc
+$\phi(x)^2 \leq \phi(x)\phi(1)$. Puisque $\phi(x) \geq 0$ ($\phi$ étant
+définie positive), $\phi(x) \leq \phi(1)$
+
+\item $1 > x > \frac{1}{2}$; on a alors $\max(2x - 1, 0) = 2x - 1$, et donc
+$\phi(x)^2 \leq \phi(2x - 1) \phi(1)$.
+
+Définissons la suite $(u_n)_{n \in \mathbb{N}}$ tel que $u_0 = x$ et $u_{n +
+1} = 2u_n - 1$. Cette suite est strictement décroissante, et tends vers
+$-\infty$. Donc, il existe $n$ tel que $u_n \geq \frac{1}{2}$, et donc tel que
+$\phi(u_n) < \phi(1)$. Or $\phi(u_{n})^2 < \phi(u_{n - 1})\phi(1)$, donc
+$\phi(u_{n - 1}) < 1$. Par récurrence on obtient donc que $\phi(u_0) = \phi(x) <
+\phi(1)$, et ce $\forall x \in ]\frac{1}{2}, 1[$.
+\end{itemize}
+
+Donc $\phi(1) = \max \phi(x)$. $\phi$ est donc bornée.
+
+On peut donc en déduire que les fonctions $\phi$ telles que $\phi(max(x + y -
+1)$ sont définies positives sont aussi bornées. On peut donc les écrire sous
+la forme:
+
+\begin{align*}
+\phi(s) & = & \int_0^\infty \rho_a(s)d\mu(a) + b \rho_\infty
+\end{align*}
+
+$\rho_a$ étant les semi-charactères bornés sur $([0, 1], \circ)$,
+
+\section{Exercice 4}
+
+Considérons le semi-groupe $(\mathbb{R}, \max, Id)$
 
 \end{document}
