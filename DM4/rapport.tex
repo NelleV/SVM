@@ -1,0 +1,122 @@
+\documentclass{article}
+%\usepackage[latin1]{inputenc}
+\usepackage{graphicx,amssymb,amsmath,amsbsy,MnSymbol} % extensions pour maths avancées
+\usepackage{graphicx,mathenv}           % extensions pour figures
+\usepackage[T1]{fontenc}        % pour les charactères accentués 
+\usepackage[utf8]{inputenc} 
+\usepackage{multicol}
+\usepackage{wrapfig}
+\usepackage{stmaryrd} % Pour les crochets d'ensemble d'entier
+\usepackage{float}  % Pour placer les images là ou JE veux.
+
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\sinc}{sinc}
+
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.1in}
+\setlength{\topmargin}{-0.4in}
+\setlength{\topskip}{0.7in}    % between header and text
+\setlength{\textheight}{9in} % height of main text
+\setlength{\textwidth}{6in}    % width of text
+\setlength{\oddsidemargin}{0in} % odd page left margin
+\setlength{\evensidemargin}{0in} % even page left margin
+%
+%% Quelques raccourcis clavier :
+\def\slantfrac#1#2{\kern.1em^{#1}\kern-.3em/\kern-.1em_{#2}}
+\def\b#1{\mathbf{#1}}
+\def\bs#1{\boldsymbol{#1}}
+\def\m#1{\mathrm{#1}}
+\bibliographystyle{acm}
+%
+\newcommand{\greeksym}[1]{{\usefont{U}{psy}{m}{n}#1}}
+\newcommand{\inc}{\mbox{\small\greeksym{d}\hskip 0.05ex}}%
+\pagenumbering{arabic}
+\date{\today}
+\title{Méthodes à noyaux - DM4}
+\author{Nelle Varoquaux}
+\begin{document}
+\maketitle
+
+\section{Exercice 1}
+Soit
+
+\begin{equation*}
+I(x) = \begin{cases}
+       1 & \mbox{si} -1 \leq x \leq 1 \\
+       0 & \mbox{sinon}
+       \end{cases}
+\end{equation*}
+
+Posons $B_n = I^{*n}$ pour $n \in \mathbb{N}_*$.
+
+Etudions la transformée de Fourir inverse de $B_n$:
+\begin{align*}
+\breve{B}_n(x) & = & \frac{1}{2 \pi} \int_{- \infty}^{\infty} e^{ix\omega}
+	     \int_{- \infty}^{\infty} I(u) B_{n- 1}(\omega - u) du d\omega\\
+	   & = & \frac{1}{2 \pi} \int_{- \infty}^{\infty} e^{ix\omega}
+		 \int_{- 1}^{1} B_{n- 1}(\omega - u) du d \omega\\
+\end{align*}
+
+Par Fubini, on a donc:
+\begin{align*}
+\breve{B}_n(x) & = & \frac{1}{2 \pi} \int_{- 1}^{1} \int_{- \infty}^{\infty}
+	           e^{ix\omega} B_{n - 1}(\omega - u) d\omega du \\
+	       & = & \frac{1}{2 \pi} \int_{- 1}^{1} \int_{- \infty}^{\infty}
+	           e^{ixu} e^{-ixt }B_{n - 1}(t) dt du \\
+	       & = & \frac{1}{2 \pi} \int_{- 1}^{1} e^{ixu}  \int_{- \infty}^{\infty}
+	           e^{-ixt }B_{n - 1}(t) dt du \\
+	       & = & \frac{1}{2 \pi} \int_{- 1}^{1} e^{ixu} \breve{B}_{n - 1}(t) dt du \\
+	       & = & \frac{1}{2 \pi} \sinc(x) \breve{B}_{n - 1}(x) \\
+\end{align*}
+
+On a donc par récurrence:
+
+\begin{align*}
+\breve{B}_n(x) & = & \frac{1}{(2 \pi)^n} \sinc(x)^n \\
+\end{align*}
+
+\section{Exercice 2}
+
+
+\begin{itemize}
+
+\item Posons $\forall x, y \in \mathbb{R}$, $K_1(x, y) = \frac{1}{2 - e^{- \| x - y\|^2}}$
+
+On a donc:
+
+\begin{align*}
+K_1(x, y) & = & \frac{1}{2 - e^{- \| x - y\|^2}} \\
+	  & = & \frac{1}{2} \frac{1}{1 - \frac{e^{- \| x - y\|^2}}{2}} \\
+	  & = & \frac{1}{2} \sum_{n = 1}^\infty \(\frac{e^{- \| x - y\|^2}}{2}\)^n
+\end{align*}
+
+Étudions maintenant chaque terme de la suite $K^{(n)}(x, y) = \(\frac{e^{- \| x -
+y\|^2}}{2}\)^n $. On a alors $\kappa^{(n)}(\omega) = \frac{e^{-
+n\|\omega\|^2)}}{2^n}$. Donc par le théorème de Bochner, $\forall n, K^{(n)}$
+est défini positif. Chaque terme de la série de $K_1$ est donc définie
+positif. On peut donc en déduire que $K_1$ est défini positif.
+
+\item Posons $\forall x, y \in \mathbb{R}$, $K_2(x, y) = \max\(0, 1 - |x - y|\)$
+
+Étudions la transformée de Fourier inverse de: $K_2(u) = \max\(0, 1 - |u|\)$
+
+\begin{align*}
+\breve{K}_2(u) & = & \frac{1}{2\pi} \int_{- \infty}^{\infty} e^{iu\omega}
+		     \max\(0, 1 - |\omega|\) d\omega \\
+	       & = & \frac{1}{2\pi} \int_{- 1}^{1} e^{iu\omega} \(1 - |\omega|\) d\omega \\
+	       & = & \frac{1}{2 \pi} \[\sinc(x) - 2
+		     \int_{0}^1e^{iu\omega}\omega d\omega\] \\
+	       & = & \frac{1}{2 \pi} \sinc(x)
+\end{align*}
+
+Donc $\breve{K}_2(u)$ prends des valeurs négatives: par le théorème de
+Bochner, $K_2(x, y)$ n'est donc pas défini positif.
+
+\item Posons $\forall x, y \in \mathbb{R}$, $K_3(x, y) =\frac{1}{1 + x + y}$
+
+
+\end{itemize}
+
+\end{document}
